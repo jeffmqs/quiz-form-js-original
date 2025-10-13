@@ -41,13 +41,12 @@ body{
   padding:clamp(24px,6vh,72px) clamp(16px,5vw,64px);
   text-align:center;
 }
-/* ativa centralização */
 #screen-intro.active{
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   min-height:calc(100dvh - var(--footer-h) - 48px);
 }
 
-/* BG full-bleed da intro */
+/* BG full-bleed */
 body:has(#screen-intro.active){
   background:url("./images/bg_voce_futuro-06.jpg") center/cover no-repeat fixed;
 }
@@ -62,11 +61,14 @@ body:has(#screen-intro.active){
   width:clamp(180px,38vw,300px);
   margin-bottom:clamp(14px,2.6vh,28px);
 }
-.intro-content{ display:flex; flex-direction:column; align-items:center; justify-content:center; max-width:960px; width:min(960px,100%) }
+.intro-content{
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  max-width:960px; width:min(960px,100%);
+}
 #screen-intro .lead{
   color:#fff; line-height:1.6; max-width:70ch;
   font-size:clamp(16px,3.6vw,20px);
-  margin:clamp(8px,1.6vh,16px) auto 36px; /* mais afastado da imagem */
+  margin:clamp(8px,1.6vh,16px) auto 36px;
 }
 
 /* smartphone */
@@ -88,6 +90,18 @@ body:has(#screen-intro.active){
 .btn.primary:disabled{ opacity:.6; cursor:not-allowed }
 #btnStart,#btnToQuiz,#btnNext,#btnSend{ margin:12px auto 0; font-size:1rem }
 #screen-intro #btnStart{ filter:drop-shadow(0 8px 18px rgba(0,0,0,.25)) }
+
+/* botão INICIAR maior no celular */
+@media (max-width:599px){
+  body:not(.totem) #screen-intro #btnStart {
+    font-size: 1.3rem !important;  /* texto um pouco maior */
+    font-weight: 800;              /* deixa mais “presente” */
+    letter-spacing: 0.5px;         /* leve espaçamento entre letras */
+    padding: 12px 20px !important; /* mantém o padrão de outras telas */
+    min-width: 150px !important;   /* evita o botão largo */
+    min-height: 44px !important;   /* altura padrão */
+  }
+}
 
 /* =============== HEADER / VOLTAR =============== */
 .formHeader{ display:flex; align-items:center; gap:8px; margin-bottom:12px }
@@ -161,7 +175,16 @@ input::placeholder{ color:#888 }
 }
 .option:hover{ background:#fff1f1; border-color:var(--brand) }
 .option input{ display:none }
-.option span{ flex:1; color:var(--ink); line-height:1.35; font-weight:400; white-space:normal }
+/* garante texto completo, nunca cortado */
+.option span{
+  flex:1;
+  color:var(--ink);
+  line-height:1.35;
+  font-weight:400;
+  white-space:normal;
+  overflow:visible;
+  text-overflow:unset;
+}
 .option::before{ content:attr(data-letter) "."; font-weight:700; color:var(--brand); margin-right:6px }
 .option.selected{ background:var(--brand); border-color:var(--brand); color:#fff }
 .option.selected span,.option.selected::before{ color:#fff; font-weight:600 }
