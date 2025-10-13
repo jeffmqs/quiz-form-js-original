@@ -1,691 +1,200 @@
-/* =================== TOKENS =================== */
+/* =============== TOKENS / BASE =============== */
 :root{
-  --brand: #a71916;     /* vermelho Unicap */
-  --brand-dark: #800e0e;
-  --ink: #111111;
-  --muted: #555555;
-  --stroke: #e2e2e2;
-  --radius: 18px;
-  --gap: 20px;
-  --fs-base: clamp(16px, 2.6vh + 0.4vw, 20px);
-  --footer-h: 35px;
+  --brand:#a71916; --brand-dark:#800e0e;
+  --ink:#111; --muted:#555; --stroke:#e2e2e2;
+  --radius:18px; --gap:20px; --footer-h:35px;
+  --fs-base:16px;
 }
+/* perfis */
+@media (max-width:599px){ :root{ --fs-base:clamp(15px,2.5vh + .4vw,18px);} }
+@media (min-width:600px) and (max-width:1023px){ :root{ --fs-base:clamp(16px,2.2vh,19px);} }
+@media (min-width:1024px){ :root{ --fs-base:clamp(16px,1.8vh + .4vw,20px);} }
 
-*{ box-sizing: border-box; }
-html, body{ height: 100%; margin: 0; }
+*{ box-sizing:border-box }
+html,body{ height:100%; margin:0 }
 body{
-  font-family: "Montserrat", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  font-size: var(--fs-base);
-  background: #ffffff;
-  color: var(--ink);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font: var(--fs-base) "Montserrat",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  color:var(--ink); background:#fff;
+  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
 }
 
-/* =================== APP WRAPPER =================== */
 #app{
-  min-height: 100dvh;
-  display: grid;
-  place-items: start center;
-  padding: 24px env(safe-area-inset-right) calc(var(--footer-h) + 24px) env(safe-area-inset-left);
+  min-height:100dvh;
+  display:grid; place-items:start center;
+  padding:24px env(safe-area-inset-right) calc(var(--footer-h) + 24px) env(safe-area-inset-left);
 }
 
-/* Telas */
+/* =============== SCREENS =============== */
 .screen{
-  width: min(960px, 100%);
-  background: #ffffff;
-  padding: clamp(18px, 4vh, 42px) clamp(18px, 6vw, 48px);
-  display: none;
+  width:min(960px,100%);
+  padding:clamp(18px,4vh,42px) clamp(18px,6vw,48px);
+  display:none;
+  border-radius:var(--radius);
+  background:#fff;
 }
-.screen.active{ display: block; }
+.screen.active{ display:block }
 
-/* =================== INTRO =================== */
-#logo{
-  max-width: none !important;   /* neutraliza limites antigos */
-  width: clamp(260px, 70vw, 250px);
-  height: auto;
-  margin: 16px auto 24px;
+/* Intro sem cartão branco */
+#screen-intro{
+  background:transparent; border-radius:0; box-shadow:none;
+  width:100%; max-width:none;
+  padding:clamp(24px,6vh,72px) clamp(16px,5vw,64px);
+  text-align:center;
+}
+/* ativa centralização */
+#screen-intro.active{
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  min-height:calc(100dvh - var(--footer-h) - 48px);
 }
 
-@media (max-width: 480px){
-  #logo{
-    width: clamp(300px, 78vw, 460px);
-  }
+/* BG full-bleed da intro */
+body:has(#screen-intro.active){
+  background:url("./images/bg_voce_futuro-06.jpg") center/cover no-repeat fixed;
 }
-#screen-intro{ text-align: center; }
-.intro-content{
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
+@media (max-width:599px){
+  body:has(#screen-intro.active){ background-image:url("./images/bg_voce_futuro-05.jpg"); }
 }
-#screen-intro h1{
-  font-size: clamp(28px, 6vw, 42px);
-  font-weight: 800;
-  margin-top: 24px;
-  margin-bottom: 24px;
-  color: #FFFFFF;
+
+/* =============== INTRO CONTENT =============== */
+#logo{ width:clamp(140px,18vw,220px); height:auto; margin:16px auto 24px; }
+#introTitle.logo-evento{ display:flex; justify-content:center; margin:24px auto; }
+#introTitle.logo-evento img{
+  width:clamp(180px,38vw,300px);
+  margin-bottom:clamp(14px,2.6vh,28px);
 }
+.intro-content{ display:flex; flex-direction:column; align-items:center; justify-content:center; max-width:960px; width:min(960px,100%) }
 #screen-intro .lead{
-  color: var(--muted);
-  font-size: clamp(16px, 4.5vw, 20px);
-  line-height: 1.6;
-  max-width: 70ch;
-  margin: 0 auto 60px;
-  color: #FFFFFF;
+  color:#fff; line-height:1.6; max-width:70ch;
+  font-size:clamp(16px,3.6vw,20px);
+  margin:clamp(8px,1.6vh,16px) auto 36px; /* mais afastado da imagem */
 }
 
-/* =================== BOTÕES (base) =================== */
+/* smartphone */
+@media (max-width:599px){
+  #logo{ position:absolute; top:12px; right:12px; width:110px; margin:0 }
+  #screen-intro.active{ padding-top:140px; min-height:calc(100dvh - var(--footer-h) - 32px) }
+  #introTitle.logo-evento img{ width:200px }
+}
+
+/* =============== BOTÕES =============== */
 .btn{
-  -webkit-tap-highlight-color: transparent;
-  cursor: pointer;
-  border: 0;
-  border-radius: 999px;
-  padding: 14px 22px;
-  font-weight: 600;
-  min-height: 50px;
-  min-width: 160px;
-  font-family: "Poppins", sans-serif;
-  font-weight: 700; /* Bold */
+  -webkit-tap-highlight-color:transparent;
+  cursor:pointer; border:0; border-radius:999px;
+  padding:12px 20px; min-height:44px; min-width:150px;
+  font-weight:700; font-family:"Poppins",sans-serif;
 }
-.btn.primary{ background: var(--brand); color:#fff; }
-.btn.primary:hover{ background: var(--brand-dark); }
-.btn.primary:disabled{ opacity:.6; cursor:not-allowed; }
+.btn.primary{ background:var(--brand); color:#fff }
+.btn.primary:hover{ background:var(--brand-dark) }
+.btn.primary:disabled{ opacity:.6; cursor:not-allowed }
+#btnStart,#btnToQuiz,#btnNext,#btnSend{ margin:12px auto 0; font-size:1rem }
+#screen-intro #btnStart{ filter:drop-shadow(0 8px 18px rgba(0,0,0,.25)) }
 
-/* ===== Botões do fluxo (tamanho unificado) ===== */
-#btnStart,
-#btnToQuiz,
-#btnNext,
-#btnSend{
-  display: block;
-  margin: 16px auto 0;  /* mesmo espaçamento base */
-  padding: 12px 24px;   /* mais compacto */
-  border-radius: 999px;
-  min-width: 180px;     /* antes 220px */
-  min-height: 46px;     /* antes 50px */
-  width: auto;
-  font-size: 1.05em;    /* unificado (antes havia 1.2/1.25) */
-}
+/* =============== HEADER / VOLTAR =============== */
+.formHeader{ display:flex; align-items:center; gap:8px; margin-bottom:12px }
+.formHeader h2{ margin:0; text-align:left; font-weight:700; color:var(--ink); font-size:clamp(22px,2.3vh + 1vw,36px) }
+.formHeader .btn.ghost{ all:unset; cursor:pointer; display:inline-flex; align-items:center }
+.formHeader .btn.ghost::before{ content:"←"; color:var(--brand); font-size:clamp(28px,4.2vw,50px); line-height:1 }
 
-/* ===== Mobile: ainda mais compacto ===== */
-@media (max-width: 600px){
-  #btnStart,
-  #btnToQuiz,
-  #btnNext,
-  #btnSend{
-    font-size: 1em;
-    padding: 11px 20px;
-    min-width: 150px;
-    min-height: 44px;
-    margin-top: 12px;
-  }
-}
+/* =============== FORM =============== */
+form{ display:grid; gap:var(--gap) }
+.field{ display:grid; gap:8px }
+label{ font-weight:500; color:var(--ink) }
+.req{ color:var(--brand) }
 
-/* =================== VOLTAR (só a seta) =================== */
-.formHeader .btn.ghost{
-  all: unset;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-}
-.formHeader .btn.ghost::before{
-  content: "←";
-  font-size: 50px;
-  line-height: 1;
-  color: var(--brand);
-}
-@media (max-width: 600px){
-  .formHeader .btn.ghost::before{ font-size: 30px; }
-}
-
-/* Cabeçalhos */
-.formHeader{
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-.formHeader h2{
-  margin: 0;
-  text-align: left;
-  font-size: clamp(22px, 2.3vh + 1vw, 36px);
-  font-weight: 700;
-  color: var(--ink);
-}
-
-/* Cadastro: título maior no mobile */
-@media (max-width: 600px){
-  #screen-signup .formHeader h2{
-    font-size: clamp(28px, 9vw, 30px);
-  }
-}
-
-/* =================== FORM / CAMPOS =================== */
-form{ display: grid; gap: var(--gap); }
-.field{ display: grid; gap: 8px; }
-
-label{ font-weight: 500; color: var(--ink); }
-.req{ color: var(--brand); }
-
+/* Campos básicos */
 input[type="text"],
 input[type="tel"],
-input[type="email"]{
-  width: 100%;
-  border: none;
-  border-bottom: 2px solid var(--brand);
-  border-radius: 0;
-  padding: 12px 6px 10px;
-  background: transparent;
-  color: var(--ink);
-  font-size: 1em;
+input[type="email"],
+select{
+  width:100%;
+  border:none;
+  border-bottom:2px solid var(--brand);
+  border-radius:0;
+  padding:12px 6px 10px;
+  background-color:transparent;
+  color:var(--ink);
+  font-size:1em;
 }
-input::placeholder{ color:#888; }
-input:focus{ outline:none; border-bottom-color: var(--brand-dark); }
+select:focus,input:focus{ outline:none; border-bottom-color:var(--brand-dark); }
+input::placeholder{ color:#888 }
 
-.error{
-  color:#b40000;
-  font-weight:400;
-  font-style: italic;
-  font-size:.85em;
-  min-height:1em;
-}
-.msg{ text-align:center; color:#1a7f37; min-height:1.2em; font-weight:600; }
-
-/* =================== QUIZ =================== */
-.progress{ display:flex; align-items:center; gap:10px; margin-left:auto; }
-#progressText{ font-size:.9em; color:#666; }
-.progress .bar{ width:140px; height:8px; background:#eee; border-radius:999px; overflow:hidden; }
-#progressBar{ height:100%; width:0%; background:var(--brand); transition: width .25s ease; }
-
-.quiz-card{ display:grid; gap:16px; }
-
-/* título da pergunta maior (não diminui tanto) */
-#qTitle{
-  text-align:left;
-  font-size: clamp(24px, 2.2vh + 1vw, 38px);
-  font-weight: 700;
-  color: var(--ink);
+/* Setinha somente no campo Série */
+#serie{
+  appearance:none;
+  padding-right:36px;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--brand) 50%),
+    linear-gradient(135deg, var(--brand) 50%, transparent 50%);
+  background-position:
+    right 14px center,
+    right 8px center;
+  background-size:6px 6px, 6px 6px;
+  background-repeat:no-repeat;
 }
 
-/* opções do quiz — texto completo e menos bold */
-.options{ display:grid; gap:12px; }
+/* Erros e mensagens */
+.error{ color:#b40000; font-style:italic; font-size:.85em; min-height:1em }
+.msg{ text-align:center; color:#1a7f37; min-height:1.2em; font-weight:600 }
+
+/* Consentimento menor */
+.field.consent{ display:grid; gap:8px }
+.consent-label{ display:flex; align-items:flex-start; gap:10px; line-height:1.35 }
+.consent-label input[type="checkbox"]{ margin-top:3px; transform:scale(1.1) }
+.field.consent span{ font-size:0.8em; line-height:1.3; color:#444; }
+.field.consent a{ color:var(--brand); text-decoration:underline }
+
+/* =============== QUIZ =============== */
+.progress{ display:flex; align-items:center; gap:10px; margin-left:auto }
+#progressText{ font-size:.9em; color:#666 }
+.progress .bar{ width:140px; height:8px; background:#eee; border-radius:999px; overflow:hidden }
+#progressBar{ height:100%; width:0%; background:var(--brand); transition:width .25s ease }
+
+.quiz-card{ display:grid; gap:16px }
+#qTitle{ text-align:left; font-size:clamp(24px,2.2vh + 1vw,38px); font-weight:700; color:var(--ink) }
+
+.options{ display:grid; gap:12px }
 .option{
   display:flex; align-items:flex-start; gap:12px;
-  padding:16px 18px;
-  border:1px solid #ddd; border-radius: var(--radius);
+  padding:16px 18px; border:1px solid #ddd; border-radius:var(--radius);
   background:#fafafa; cursor:pointer;
-  transition: background .2s, border-color .2s, color .2s, box-shadow .2s;
-  font-weight: 400;
+  transition:background .2s,border-color .2s,color .2s,box-shadow .2s;
 }
-.option:hover{ background:#fff1f1; border-color: var(--brand); }
-.option input{ display:none; }
-.option span{
-  flex:1; color:var(--ink); line-height:1.35; font-weight:400;
-  white-space: normal;
-  overflow: visible;
-  text-overflow: clip;
-}
-.option::before{ content: attr(data-letter) "."; font-weight:700; color: var(--brand); margin-right:6px; }
-.option.selected{ background:var(--brand); border-color:var(--brand); color:#fff; }
-.option.selected span{ color:#fff; font-weight: 600; }
-.option.selected::before{ color:#fff; }
+.option:hover{ background:#fff1f1; border-color:var(--brand) }
+.option input{ display:none }
+.option span{ flex:1; color:var(--ink); line-height:1.35; font-weight:400; white-space:normal }
+.option::before{ content:attr(data-letter) "."; font-weight:700; color:var(--brand); margin-right:6px }
+.option.selected{ background:var(--brand); border-color:var(--brand); color:#fff }
+.option.selected span,.option.selected::before{ color:#fff; font-weight:600 }
 
-/* =================== RESULTADO =================== */
-.result{
-  display:grid;
-  gap:18px;
-}
-.result h3{
-  margin:0;
-  text-align:center;
-  font-size: clamp(20px, 2vh + 1vw, 34px);
-  color:var(--ink);
-}
-.result p{
-  margin:0;
-  color:var(--muted);
-  text-align:center;
-}
-
-/* Cursos com bullets (vermelhos), duas colunas em telas largas */
+/* =============== RESULTADO =============== */
+.result{ display:grid; gap:18px }
+.result h3{ margin:0; text-align:center; font-size:clamp(20px,2vh + 1vw,34px); color:var(--brand) }
+.result p{ margin:0; color:var(--muted); text-align:center }
 .result ul{
-  margin: 6px auto 0;
-  padding-left: 1.25em;
-  list-style: disc;
-  list-style-position: outside;
-  text-align: left;
-  column-gap: 28px;
-  columns: 1;
-  max-width: 80ch;
+  margin:6px auto 0; padding-left:1.25em; list-style:disc; list-style-position:outside;
+  text-align:left; column-gap:28px; columns:1; max-width:80ch;
 }
-.result ul li{
-  padding: 4px 0;
-  break-inside: avoid;
-}
-.result ul li::marker{
-  color: var(--brand);
-}
-@media (min-width: 900px){
-  .result ul{ columns: 2; }
-}
+.result li{ padding:4px 0; break-inside:avoid }
+.result li::marker{ color:var(--brand) }
+@media (min-width:900px){ .result ul{ columns:2 } }
+#screen-result .actions{ margin-top:32px }
 
-/* Frase do estande mais afastada do bloco de cursos */
-.result p:last-of-type{ margin-top: 28px; }
-
-/* =================== RODAPÉ FIXO =================== */
+/* =============== RODAPÉ =============== */
 #app-footer{
-  position: fixed;
-  left: 0; right: 0; bottom: 0;
-  height: var(--footer-h);
-  background: #fff;
-  border-top: 1px solid #eee;
-  display: grid; place-items: center;
-  padding: 0 12px;
-  z-index: 10;
+  position:fixed; left:0; right:0; bottom:0; height:var(--footer-h);
+  background:#fff; border-top:1px solid #eee; display:grid; place-items:center; padding:0 12px; z-index:10;
 }
-#app-footer p{ margin:0; color: #000000; font-size:.70em; }
+#app-footer p{ margin:0; color:#000; font-size:.70em }
 
-@media (max-width: 600px){
-  #app-footer p{ font-size: .65em; }
-}
-
-/* =================== RESPONSIVIDADE GLOBAL =================== */
-@media (orientation: portrait){
-  :root{ --fs-base: clamp(18px, 3.2vh + 0.6vw, 22px); }
-}
-@media (orientation: landscape) and (max-height: 520px){
-  :root{ --fs-base: clamp(15px, 1.5vh + 0.6vw, 18px); }
-}
-
-/* ===== Intro: aproximar botão do texto ===== */
-#screen-intro .intro-content{ gap: 12px; }
-#screen-intro .lead{ margin: 0 auto 24px; }
-#btnStart{ margin-top: 8px; }
-
-/* Mobile: um pouquinho mais de respiro, mas ainda perto */
-@media (max-width: 600px){
-  #screen-intro .lead{ margin-bottom: 20px; }
-  #btnStart{ margin-top: 6px; }
-}
-
-@media (max-width: 600px){
-  #logo{
-    width: clamp(160px, 50vw, 250px); /* antes 300–460px */
-  }
-}
-
-/* Afinar as linhas vermelhas dos campos */
-#screen-signup input[type="text"],
-#screen-signup input[type="tel"],
-#screen-signup input[type="email"]{
-  border-bottom-width: 1px;   /* era 2px */
-}
-
-/* Mantém fino também no foco */
-#screen-signup input[type="text"]:focus,
-#screen-signup input[type="tel"]:focus,
-#screen-signup input[type="email"]:focus{
-  border-bottom-width: 1px;   /* pode deixar 1px ou 1.5px se quiser um leve destaque */
-}
-
-/* 1) "Seu perfil é: ..." na cor da Unicap */
-#screen-result .result h3{
-  color: var(--brand);
-}
-
-/* 2) "Resultado" um pouco maior no mobile */
-@media (max-width: 600px){
-  #screen-result .formHeader h2{
-    font-size: clamp(20px, 9vw, 28px); /* maior no celular */
-  }
-}
-
-#screen-quiz #btnNext{
-  margin-top: 10px;   /* antes era ~24px */
-}
-
-/* Mobile: botão OK mais perto das perguntas */
-@media (max-width: 600px){
-  #screen-quiz .quiz-card{
-    gap: 8px;                 /* menos espaço entre título, opções e botão */
-  }
-}
-
-/* Mobile: diminuir um pouco o botão OK */
-@media (max-width: 600px){
-  #btnNext,
-  #btnToQuiz{
-    font-size: 0.95em;
-    padding: 9px 16px;
-    min-width: 140px;
-    min-height: 44px;   /* mantém área de toque segura */
-    margin-top: 6px;
-  }
-}
-
-/* Resultado: afastar o botão da frase final */
-#screen-result .actions{
-  margin-top: 35px; /* ajuste livre: 24–40px */
-}
-
-/* Mobile: um pouco menos (se quiser) */
-@media (max-width: 600px){
-  #screen-result .actions{
-    margin-top: 28px;
-  }
-}
-
-@media (max-width: 600px){
-  #screen-result .result h3{
-    font-size: clamp(26px, 8.5vw, 34px); /* maior no cel */
-    line-height: 1.25;
-  }
-}
-
-/* =================== BG INTRO =================== */
-#screen-intro {
-  background: url("./bg_voce_futuro-08.jpg") no-repeat center center;
-  background-size: cover;
-  border-radius: var(--radius);
-}
-
-/* Versão Mobile */
-@media (max-width: 600px) {
-  #screen-intro {
-    background: url("./bg_voce_futuro-07.jpg") no-repeat center center;
-    background-size: cover;
-  }
-}
-
-/* ===== Reset da intro (garante que não fique expandida) ===== */
-#screen-intro{
-  margin: 0;                /* volta ao normal */
-  width: min(960px, 100%);  /* segue a mesma largura das demais telas */
-  border-radius: var(--radius);
-  background: transparent;  /* o bg agora vai no body */
-}
-
-/* ===== Fundo full-bleed só quando a intro estiver ativa ===== */
-body{
-  background: #ffffff; /* padrão para as outras telas */
-}
-
-/* Desktop: aplica o BG enquanto #screen-intro estiver ativo */
-body:has(#screen-intro.active){
-  background: url("./bg_voce_futuro-06.jpg") center/cover no-repeat fixed;
-}
-
-/* Mobile: troca a imagem */
-@media (max-width: 600px){
-  body:has(#screen-intro.active){
-    background-image: url("./bg_voce_futuro-05.jpg");
-  }
-}
-
-/* Overlay sutil para legibilidade do texto na intro */
-body:has(#screen-intro.active)::before{
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(0,0,0,.14), rgba(0,0,0,.28));
-  pointer-events: none;
-}
-
-/* Dá um respiro interno na intro sem empurrar o layout */
-#screen-intro{
-  padding-block: clamp(24px, 8vh, 96px);
-  padding-inline: clamp(16px, 6vw, 64px);
-}
-
-#introTitle br {
-  display: none;
-}
-
-/* No mobile, ativa a quebra de linha */
-@media (max-width: 600px) {
-  #introTitle br {
-    display: inline;
-  }
-}
-
-/* =================== LOGO COMO CABEÇALHO NO MOBILE =================== */
-@media (max-width: 600px) {
-  #logo {
-    position: absolute;   /* tira do fluxo normal */
-    top: 12px;            /* distância do topo */
-    right: 12px;          /* distância da direita */
-    width: 120px;         /* ajusta o tamanho p/ cabeçalho */
-    height: auto;
-    margin: 0;            /* remove as margens automáticas */
-  }
-
-  /* Garante que a seção de intro não fique escondida pela logo */
-  #screen-intro {
-    position: relative;   /* cria referência para o absolute */
-    padding-top: 160px;    /* dá espaço para o conteúdo não colar na logo */
-  }
-}
-
-/* Centralizar a logo do evento no lugar do título */
-#introTitle.logo-evento {
-  display: flex;
-  justify-content: center;
-  margin: 24px auto;
-}
-
-/* Desktop */
-#introTitle.logo-evento img {
-  width: clamp(200px, 60vw, 280px);
-}
-
-/* Mobile */
-@media (max-width: 600px) {
-  #introTitle.logo-evento img {
-    width: 200px;  /* tamanho fixo no mobile */
-  }
-}
-
-/* ===== Consentimento (LGPD) ===== */
-.field.consent { display: grid; gap: 8px; }
-.consent-label { display: flex; align-items: flex-start; gap: 10px; line-height: 1.45; }
-.consent-label input[type="checkbox"] { margin-top: 3px; transform: scale(1.1); }
-.field.consent a { color: var(--brand); text-decoration: underline; }
-.field.consent span {
-  font-size: 0.85em; 
-  line-height: 1.4;
-}
-
-/* Ajuste de tamanhos só no desktop */
-@media (min-width: 601px) {
-  /* Logo da Unicap */
-  #logo {
-    width: 180px;   /* antes clamp(...) → agora menor */
-  }
-
-  /* Logo do evento "Você no Futuro" */
-  #introTitle.logo-evento img {
-    width: 220px;   /* antes chegava até 280px → agora fixo menor */
-  }
-}
-
-/* Mobile: reduzir o texto da LGPD, independente do --fs-base */
-@media (max-width: 600px) {
-  /* aumenta a especificidade pra vencer regras anteriores */
-  #screen-signup .field.consent .consent-label > span {
-    /* usa clamp em px/vw/px para não herdar o root */
-    font-size: clamp(12px, 3.5vw, 14px);
-    line-height: 1.4;
-  }
-
-  #screen-signup .field.consent .hint {
-    font-size: clamp(11px, 3.2vw, 13px);
-    line-height: 1.35;
-  }
-}
-
-/* ==== OVERRIDE: botões menores (desktop) ==== */
-#app #btnStart.btn,
-#app #btnToQuiz.btn,
-#app #btnNext.btn,
-#app #btnSend.btn{
-  padding: 9px 16px;   /* antes 12–14 x 20–24 */
-  min-height: 40px;    /* antes 46–50 */
-  min-width: 140px;    /* antes 150–180 */
-  font-size: 0.95em;   /* antes ~1.0–1.05em */
-  border-radius: 21px; /* antes 999px */
-}
-
-/* ==== OVERRIDE: botões menores (mobile) ==== */
-@media (max-width: 600px){
-  #app #btnStart.btn,
-  #app #btnToQuiz.btn,
-  #app #btnNext.btn,
-  #app #btnSend.btn{
-    padding: 8px 14px;
-    min-height: 36px;
-    min-width: 120px;
-    font-size: 0.9em;
-    border-radius: 21px;
-  }
-}
-
-/* =================== TOTEM MODE =================== */
-body.totem #btnStart,
-body.totem #btnToQuiz,
-body.totem #btnNext,
-body.totem #btnSend{
-  font-size: 1em;
-  padding: 11px 20px;
-  min-width: 150px;
-  min-height: 44px;
-  margin-top: 12px;
-  border-radius: 12px; /* cantos mais discretos */
-}
-
-/* Logo Unicap no cabeçalho */
-body.totem #logo{
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 120px;
-  height: auto;
-  margin: 0;
-}
-body.totem #screen-intro{
-  position: relative;
-  padding-top: 160px; /* espaço pro conteúdo não colar na logo */
-}
-
-/* Logo do evento “Você no Futuro” (usa tamanho de mobile) */
-body.totem #introTitle.logo-evento img{
-  width: 200px;
-}
-
-/* Texto LGPD menor (como no mobile) */
-body.totem #screen-signup .field.consent .consent-label > span{
-  font-size: clamp(12px, 3.5vw, 14px);
-  line-height: 1.4;
-}
-body.totem #screen-signup .field.consent .hint{
-  font-size: clamp(11px, 3.2vw, 13px);
-  line-height: 1.35;
-}
-
-/* Fundo da intro: usa a imagem mobile no totem também */
-body.totem:has(#screen-intro.active){
-  background-image: url("./bg_voce_futuro-05.jpg");
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
-}
-
-/* Tipografia geral um pouco menor (opcional) */
-body.totem{
-  --fs-base: clamp(16px, 2.6vh + 0.4vw, 19px);
-}
-
-/* =================== TOTEM: Intro proporcional e maior =================== */
-/* Aumenta tipografia e logos só na INTRO quando estiver no modo totem */
-body.totem #screen-intro {
-  /* mais respiro vertical para a intro no totem */
-  padding-block: clamp(40px, 10vh, 160px);
-}
-
-/* Logo Unicap (canto superior) proporcional à largura da tela */
-body.totem #screen-intro #logo{
-  width: clamp(90px, 9vw, 140px);  /* antes 120px fixos */
-}
-
-/* Logo do evento “Você no Futuro” maior e responsivo */
-body.totem #screen-intro #introTitle.logo-evento img{
-  width: clamp(220px, 28vw, 420px);  /* cresce com a tela do totem */
-}
-
-/* Texto de chamada (lead) maior e proporcional; mantém boa largura de leitura */
+/* =============== TOTEM =============== */
+body.totem #screen-intro{ padding-block:clamp(60px,12vh,200px) }
+body.totem #screen-intro #logo{ width:clamp(120px,12vw,200px); position:absolute; top:12px; right:12px }
 body.totem #screen-intro .lead{
-  font-size: clamp(18px, 2.2vh + 1.6vw, 30px); /* “letras gigantes”, mas controladas */
-  line-height: 1.55;
-  max-width: min(90ch, 86%);    /* um pouco mais largo no totem, sem virar um parágrafo comprido demais */
-  margin-bottom: clamp(20px, 4vh, 40px);
+  font-size:clamp(18px,2.2vh + 1.6vw,30px);
+  line-height:1.55; max-width:min(90ch,86%); margin-bottom:clamp(20px,4vh,40px);
 }
-
-/* Botão “Iniciar” um pouco maior e proporcional na intro */
 body.totem #screen-intro #btnStart{
-  font-size: clamp(14px, 1.2vh + 0.9vw, 20px);
-  padding: clamp(10px, 1.2vh + 0.6vw, 16px) clamp(16px, 1.8vh + 1.2vw, 28px);
-  min-height: clamp(40px, 5.2vh, 56px);
-  border-radius: 14px; /* combina com seu radius menor */
+  font-size:clamp(14px,1.2vh + .9vw,20px);
+  padding:clamp(10px,1.2vh + .6vw,16px) clamp(16px,1.8vh + 1.2vw,28px);
+  min-height:clamp(40px,5.2vh,56px); border-radius:14px;
 }
-
-/* =================== TOTEM: Intro ainda maior =================== */
-body.totem #screen-intro {
-  padding-block: clamp(60px, 12vh, 200px); /* mais respiro vertical */
-}
-
-/* Logo Unicap no topo maior */
-body.totem #screen-intro #logo {
-  width: clamp(120px, 12vw, 200px); /* antes 90–140px */
-}
-
-/* Logo do evento “Você no Futuro” bem maior */
-body.totem #screen-intro #introTitle.logo-evento img {
-  width: clamp(280px, 35vw, 520px); /* sobe bastante */
-}
-
-/* Texto de chamada mais destacado */
-body.totem #screen-intro .lead {
-  font-size: clamp(22px, 2.5vh + 2vw, 36px);
-  line-height: 1.6;
-  max-width: min(95ch, 90%);
-  margin-bottom: clamp(24px, 5vh, 48px);
-  font-weight: 600;
-}
-
-/* Botão “Iniciar” proporcional */
-body.totem #screen-intro #btnStart {
-  font-size: clamp(16px, 1.5vh + 1vw, 22px);
-  padding: clamp(12px, 1.4vh + 0.8vw, 18px) clamp(20px, 2vh + 1.5vw, 32px);
-  min-height: clamp(46px, 6vh, 64px);
-  border-radius: 14px;
-}
-
-/* =================== TOTEM: Ajustes finos =================== */
-
-/* Desce todo o bloco da intro */
-body.totem #screen-intro {
-  padding-top: clamp(120px, 18vh, 260px);
-}
-
-/* Texto explicativo mais afastado do botão */
-body.totem #screen-intro .lead {
-  margin-bottom: clamp(32px, 6vh, 60px);
-}
-
-/* Botão “Iniciar” maior e proporcional */
-body.totem #screen-intro #btnStart {
-  font-size: clamp(18px, 1.6vh + 1.2vw, 26px);
-  padding: clamp(14px, 1.6vh + 0.8vw, 22px) 
-           clamp(28px, 2vh + 1.8vw, 40px);
-  min-height: clamp(52px, 6.5vh, 72px);
-  border-radius: 16px;
-}
-
-
-

@@ -8,10 +8,8 @@
   <!-- Montserrat -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800&display=swap" rel="stylesheet">
-
-  <!--Poppins-->
+  <!-- Poppins -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
-
 
   <link rel="stylesheet" href="./style.css" />
 </head>
@@ -19,16 +17,15 @@
   <main id="app">
     <!-- TELA 0: Intro -->
     <section id="screen-intro" class="screen active" aria-labelledby="introTitle">
-      <img id="logo" src="./marca_unicap_2022_bca.svg" alt="Logomarca Unicap" />
+      <img id="logo" src="./images/marca_unicap_2022_bca.svg" alt="Logomarca Unicap" />
       <div class="intro-content">
         <div id="introTitle" class="logo-evento">
-          <img src="./logo_evento.png" alt="O Futuro Espera por Você" />
+          <img src="./images/logo_evento.png" alt="O Futuro Espera por Você" />
         </div>
         <p class="lead">
           Você tem talentos únicos, sonhos que valem a pena e um futuro esperando para ser
           construído por você. Responda a 10 perguntas rápidas e viva uma experiência
-          que pode te ajudar a enxergar o seu caminho. No final, você ainda leva um brinde
-          exclusivo da Universidade Católica de Pernambuco (Unicap).
+          que pode te ajudar a enxergar o seu caminho.
         </p>
         <button id="btnStart" class="btn primary" type="button">Iniciar</button>
       </div>
@@ -56,17 +53,26 @@
 
         <div class="field">
           <label for="escola">Escola <span class="req">*</span></label>
-          <input id="escola" name="escola" type="text" required placeholder="Nome da escola" />
+          <input id="escola" name="escola" type="text" required placeholder="Ex.: Colégio Motivo / Escola Adventista" />
           <small class="error" data-for="escola"></small>
         </div>
 
         <div class="field">
           <label for="serie">Série <span class="req">*</span></label>
-          <input id="serie" name="serie" type="text" required placeholder="Ex.: 2º ano do Ensino Médio" />
+          <select id="serie" name="serie" required>
+            <option value="" selected disabled>Selecione sua série</option>
+            <option>6º ano - fundamental II</option>
+            <option>7º ano - fundamental II</option>
+            <option>8º ano - fundamental II</option>
+            <option>9º ano - fundamental II</option>
+            <option>1º ano - ensino médio</option>
+            <option>2º ano - ensino médio</option>
+            <option>3º ano - ensino médio</option>
+          </select>
           <small class="error" data-for="serie"></small>
         </div>
 
-        <!-- CONSENTIMENTO LGPD (adicionado logo abaixo de “Série”) -->
+        <!-- CONSENTIMENTO LGPD -->
         <div class="field consent">
           <label class="consent-label">
             <input id="consent" name="consent" type="checkbox" required />
@@ -74,7 +80,7 @@
               Li e concordo com o tratamento dos meus dados pessoais pela Unicap, para
               fins de contato sobre cursos e ações institucionais, conforme a
               <a href="https://portal.unicap.br/privacidade" target="_blank" rel="noopener noreferrer">
-              Política de Privacidade
+                Política de Privacidade
               </a>
               e a LGPD (Lei 13.709/2018).
             </span>
@@ -119,7 +125,7 @@
       </div>
     </section>
 
-    <!-- Rodapé global (fixo em todas as telas) -->
+    <!-- Rodapé -->
     <footer id="app-footer">
       <p>&copy; 2025 Unicap | Developed by Jeff Marques</p>
     </footer>

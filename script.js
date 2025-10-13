@@ -1,7 +1,7 @@
 /* =================== CONFIG =================== */
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbzLyUA0qYb-J_FANJ8wxYK_lL9mKrSHGJkRX7Fdfe78Goplb_6X8MgnFdJn-L5sfBGSaw/exec';
 
-/* =================== REFERÊNCIAS DE TELAS =================== */
+/* =================== TELAS =================== */
 const scrIntro  = document.getElementById('screen-intro');
 const scrSign   = document.getElementById('screen-signup');
 const scrQuiz   = document.getElementById('screen-quiz');
@@ -31,25 +31,14 @@ document.querySelectorAll('.formHeader .btn.ghost').forEach(btn => {
   btn.setAttribute('aria-label', 'Voltar');
   btn.addEventListener('click', onBack);
 });
-
 function onBack(){
-  if (scrResult.classList.contains('active')) {
-    goTo('intro');            // Resultado → Intro
+  if (scrResult.classList.contains('active')) return goTo('intro');
+  if (scrQuiz.classList.contains('active')){
+    if (step > 0){ step--; renderQuestion(); }
+    else { goTo('signup'); }
     return;
   }
-  if (scrQuiz.classList.contains('active')) {
-    if (step > 0) {           // volta pergunta por pergunta
-      step--;
-      renderQuestion();
-    } else {
-      goTo('signup');         // em 1/10 → Cadastro
-    }
-    return;
-  }
-  if (scrSign.classList.contains('active')) {
-    goTo('intro');            // Cadastro → Intro
-    return;
-  }
+  if (scrSign.classList.contains('active')) return goTo('intro');
   goTo('intro');
 }
 
@@ -60,7 +49,6 @@ const setErr = (name, msg) => {
   const el = document.querySelector(`.error[data-for="${name}"]`);
   if (el) el.textContent = msg || '';
 };
-// ADIÇÃO: incluir 'consent' no limpa-erros (mantendo estrutura)
 function clearFormErrors(){ ['nome','telefone','escola','serie','quiz','consent'].forEach(n => setErr(n,'')); }
 
 let signupData = {};
@@ -85,30 +73,73 @@ function isSequentialDesc(str){
   return true;
 }
 
+/* DDDs válidos no Brasil (ANATEL) */
+const VALID_DDDS = new Set([
+  11,12,13,14,15,16,17,18,19,
+  21,22,24,27,28,
+  31,32,33,34,35,37,38,
+  41,42,43,44,45,46,47,48,49,
+  51,53,54,55,
+  61,62,63,64,65,66,67,68,69,
+  71,73,74,75,77,79,
+  81,82,83,84,85,86,87,88,89,
+  91,92,93,94,95,96,97,98,99
+]);
+
+/* Escola — impedir abreviações aleatórias e exigir nome completo
+   Regras:
+   - Deve começar com um dos prefixos: Colégio, Escola, Instituto, Centro, Liceu
+   - Deve conter pelo menos 2 palavras com 3+ letras (evita "Colégio X" e "Esc. ABC")
+   - Não aceitar abreviações comuns como "Col.", "Esc.", "Inst.", "Cen.", "Lic."
+*/
+const SCHOOL_PREFIX = /^(col[eé]gio|escola|instituto|centro|liceu)\b/i;
+const FORBIDDEN_ABBR = /\b(col\.|esc\.|inst\.|cen\.|lic\.)\b/i;
+function isValidSchoolName(name){
+  const s = (name || '').trim().replace(/\s+/g,' ');
+  if (!SCHOOL_PREFIX.test(s)) return false;
+  if (FORBIDDEN_ABBR.test(s)) return false;
+  const parts = s.split(' ').filter(w => w.length >= 3);
+  return parts.length >= 2;
+}
+
 formSignup.addEventListener('submit', (e) => {
   e.preventDefault();
   clearFormErrors();
   const data = Object.fromEntries(new FormData(formSignup).entries());
   let ok = true;
 
+  // Nome
   if (!data.nome || data.nome.trim().length < 3) { setErr('nome', 'Informe seu nome completo.'); ok=false; }
 
+  // Telefone
   const tel = onlyDigits(data.telefone);
-  if (tel.length < 8) {
-    setErr('telefone', 'Informe um telefone válido.');
+  if (tel.length !== 11){
+    setErr('telefone', 'Informe um telefone com DDD (11 dígitos).');
     ok = false;
-  } else if (isAllSame(tel)) {
-    setErr('telefone', 'Telefone não pode ter todos os dígitos iguais.');
-    ok = false;
-  } else if (isSequentialAsc(tel) || isSequentialDesc(tel)) {
-    setErr('telefone', 'Telefone não pode ser sequência numérica (ex.: 123456789).');
+  } else {
+    const ddd = Number(tel.slice(0,2));
+    if (!VALID_DDDS.has(ddd)){
+      setErr('telefone', 'DDD inválido para o Brasil.');
+      ok = false;
+    } else if (isAllSame(tel) || isSequentialAsc(tel) || isSequentialDesc(tel)){
+      setErr('telefone', 'Telefone não pode ter todos iguais ou sequência (123… / 987…).');
+      ok = false;
+    }
+  }
+
+  // Escola
+  if (!data.escola || !isValidSchoolName(data.escola)){
+    setErr('escola', 'Digite o nome completo da escola (ex.: Colégio Motivo, Escola Adventista).');
     ok = false;
   }
 
-  if (!data.escola || data.escola.trim().length < 2) { setErr('escola', 'Informe sua escola.'); ok=false; }
-  if (!data.serie  || data.serie.trim().length < 1) { setErr('serie', 'Informe sua série.'); ok=false; }
+  // Série (select)
+  if (!data.serie){
+    setErr('serie', 'Selecione sua série.');
+    ok = false;
+  }
 
-  // ADIÇÃO: validação do consentimento LGPD
+  // LGPD
   const consentEl = document.getElementById('consent');
   const consentGiven = !!consentEl?.checked;
   if (!consentGiven){
@@ -116,14 +147,12 @@ formSignup.addEventListener('submit', (e) => {
     ok = false;
   }
 
-  // Metadados do consentimento
-  const CONSENT_TEXT_VERSION = 'v1.0 (2025-09-24)'; // atualize se alterar o texto do label
+  const CONSENT_TEXT_VERSION = 'v1.0 (2025-09-24)';
   const consentAtISO = new Date().toISOString();
   const userAgent = navigator.userAgent || '';
 
   if (!ok) return;
 
-  // ADIÇÃO: incluir campos de consentimento no objeto existente
   signupData = {
     ...data,
     telefone: tel,
@@ -195,9 +224,9 @@ const questions = [
     ]},
   { title: 'Num universo cheio de protagonistas incríveis, quem tem mais a ver com você?',
     options: [
-      { label: 'Como o Homem-Aranha (Peter Parker) ou a Katara (Avatar: A Lenda de Aang), você sente que nasceu para cuidar das pessoas e fazer a diferença com empatia e coragem.', k:'S' },
-      { label: 'Como o Tony Stark (Homem de Ferro) ou a Hermione Granger (Harry Potter), você é movido(a) pela curiosidade, ama resolver problemas e usa a mente como sua maior ferramenta.', k:'E' },
-      { label: 'Como o Miles Morales (Aranhaverso) ou a Raven (Jovens Titãs), você tem estilo, visão crítica e se expressa com intensidade. Sua força está em ser autêntico(a).', k:'H' },
+      { label: 'Como o Homem-Aranha (Peter Parker) ou a Katara (...), você sente que nasceu para cuidar das pessoas e fazer a diferença com empatia e coragem.', k:'S' },
+      { label: 'Como o Tony Stark (...) ou a Hermione Granger (...), você é movido(a) pela curiosidade, ama resolver problemas e usa a mente como sua maior ferramenta.', k:'E' },
+      { label: 'Como o Miles Morales (...) ou a Raven (...), você tem estilo, visão crítica e se expressa com intensidade. Sua força está em ser autêntico(a).', k:'H' },
     ]},
 ];
 
@@ -211,8 +240,8 @@ const btnNext     = document.getElementById('btnNext');
 const progressTxt = document.getElementById('progressText');
 const progressBar = document.getElementById('progressBar');
 
-/* === NOVO: embaralhamento estável por pergunta === */
-const shuffledOptions = {}; // step -> array de opções embaralhadas
+/* Embaralhamento estável por pergunta */
+const shuffledOptions = {};
 function shuffleArray(arr){
   const a = arr.slice();
   for (let i = a.length - 1; i > 0; i--){
@@ -224,17 +253,11 @@ function shuffleArray(arr){
 
 function renderQuestion(){
   setErr('quiz','');
-
   const q = questions[step];
-
-  // cria a ordem embaralhada uma única vez por pergunta
-  if (!shuffledOptions[step]){
-    shuffledOptions[step] = shuffleArray(q.options);
-  }
+  if (!shuffledOptions[step]) shuffledOptions[step] = shuffleArray(q.options);
   const opts = shuffledOptions[step];
 
   qTitle.textContent = q.title;
-
   qOptions.innerHTML = '';
   const letters = ['A','B','C'];
   opts.forEach((opt, idx) => {
@@ -249,7 +272,6 @@ function renderQuestion(){
     qOptions.appendChild(wrap);
   });
 
-  // Restaura seleção, se já respondida
   if (answers[step]) {
     const val = answers[step];
     const optToSelect = Array.from(qOptions.querySelectorAll('label.option'))
@@ -273,7 +295,7 @@ qOptions.addEventListener('click', (e) => {
   label.classList.add('selected');
 });
 
-/* === helper de envio, reutilizando a mesma chamada do botão "Enviar" === */
+/* Envio */
 async function postToGAS(payload){
   try{
     const resp = await fetch(GAS_URL, {
@@ -288,7 +310,6 @@ async function postToGAS(payload){
   }
 }
 
-/* >>> envia no último OK e depois mostra o resultado <<< */
 btnNext.addEventListener('click', async () => {
   const chosen = document.querySelector('input[name="answer"]:checked');
   if (!chosen){
@@ -308,7 +329,6 @@ btnNext.addEventListener('click', async () => {
     step++;
     renderQuestion();
   } else {
-    // Última pergunta: envia e então mostra o resultado
     const result = pickWinner(scores);
 
     const oldLabel = btnNext.textContent;
@@ -325,11 +345,9 @@ btnNext.addEventListener('click', async () => {
     btnNext.disabled = false;
     btnNext.textContent = oldLabel;
 
-    // Renderiza e vai ao resultado
     renderResult(result);
     goTo('result');
 
-    // Mostra status e remove o botão "Enviar"
     const sendMsg = document.getElementById('sendMsg');
     const btnSendEl = document.getElementById('btnSend');
     if (ok){
@@ -390,68 +408,24 @@ function renderResult(k){
     <p>${desc}</p>
     <p><strong>Cursos Unicap para você:</strong></p>
     <ul>${cursos.map(c => `<li>${c}</li>`).join('')}</ul>
-    <p><strong>➡️ Vá até o estande da Unicap (6C)</strong>, mostre sua tela final e ganhe um brinde exclusivo!</p>
   `;
 
   finalProfile = k;
 }
 
-
 /* =================== ENVIO → GOOGLE SHEETS =================== */
 const btnSend = document.getElementById('btnSend');
 const sendMsg = document.getElementById('sendMsg');
 
-/* remove o botão “Enviar”, já que o envio ocorre no último OK */
+/* botão “Enviar” é removido quando o envio já ocorreu no último OK */
 if (btnSend){ btnSend.remove(); }
-
-/* mantém a estrutura: só adiciona o listener se o botão existir */
-if (btnSend){
-  btnSend.addEventListener('click', async () => {
-    sendMsg.textContent = '';
-    btnSend.disabled = true;
-    btnSend.textContent = 'Enviando...';
-
-    const payload = {
-      ...signupData,
-      respostas: answers,
-      placar: scores,
-      perfil: finalProfile
-    };
-
-    try {
-      const resp = await fetch(GAS_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(payload)
-      });
-
-      if (resp.type === 'opaque' || resp.ok) {
-        sendMsg.style.color = '#1a7f37';
-        sendMsg.textContent = '✅ Concluído com sucesso!';
-      } else {
-        throw new Error('Falha no envio');
-      }
-    } catch (e) {
-      console.error(e);
-      sendMsg.style.color = '#b40000';
-      sendMsg.textContent = '⚠️ Não foi possível enviar. Tente novamente.';
-      btnSend.disabled = false;             // permite tentar de novo
-      btnSend.textContent = 'Enviar';
-      return;
-    }
-
-    btnSend.textContent = 'Enviar';
-  });
-}
 
 /* =================== UTIL =================== */
 function resetFlowForNewRun(){
   answers = [];
   scores  = {H:0,E:0,S:0};
   step    = 0;
-  // zera embaralhamentos para um novo fluxo
   for (const k in shuffledOptions) delete shuffledOptions[k];
-
   const sendMsg = document.getElementById('sendMsg');
   if (sendMsg) sendMsg.textContent = '';
 }
