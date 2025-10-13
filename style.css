@@ -92,17 +92,19 @@ body:has(#screen-intro.active){
 #screen-intro #btnStart{ filter:drop-shadow(0 8px 18px rgba(0,0,0,.25)) }
 
 /* botão INICIAR maior no celular */
-@media (max-width:599px){
-  body:not(.totem) #screen-intro #btnStart {
-    font-size: 1.3rem !important;  /* texto um pouco maior */
-    font-weight: 800;              /* deixa mais “presente” */
-    letter-spacing: 0.5px;         /* leve espaçamento entre letras */
-    padding: 12px 20px !important; /* mantém o padrão de outras telas */
-    min-width: 150px !important;   /* evita o botão largo */
-    min-height: 44px !important;   /* altura padrão */
+@media (max-width: 640px){
+  body:not(.totem) #screen-intro #btnStart{
+    font-size: clamp(1.4rem, 4.6vw, 1.9rem) !important; /* cresce de verdade */
+    font-weight: 900 !important;
+    line-height: 1.1 !important;
+    letter-spacing: 0.4px !important;
+
+    /* mantém o tamanho físico do botão */
+    padding: 12px 20px !important;
+    min-width: 150px !important;
+    min-height: 44px !important;
   }
 }
-
 /* =============== HEADER / VOLTAR =============== */
 .formHeader{ display:flex; align-items:center; gap:8px; margin-bottom:12px }
 .formHeader h2{ margin:0; text-align:left; font-weight:700; color:var(--ink); font-size:clamp(22px,2.3vh + 1vw,36px) }

@@ -223,10 +223,10 @@ const questions = [
       { label: 'Transformar vidas e promover bem-estar.',     k:'S' },
     ]},
   { title: 'Num universo cheio de protagonistas incríveis, quem tem mais a ver com você?',
-    options: [
-      { label: 'Como o Homem-Aranha (Peter Parker) ou a Katara (...), você sente que nasceu para cuidar das pessoas e fazer a diferença com empatia e coragem.', k:'S' },
-      { label: 'Como o Tony Stark (...) ou a Hermione Granger (...), você é movido(a) pela curiosidade, ama resolver problemas e usa a mente como sua maior ferramenta.', k:'E' },
-      { label: 'Como o Miles Morales (...) ou a Raven (...), você tem estilo, visão crítica e se expressa com intensidade. Sua força está em ser autêntico(a).', k:'H' },
+  options: [
+    { label: 'Como o Homem-Aranha (Peter Parker) ou a Katara (Avatar: A Lenda de Aang), você sente que nasceu para cuidar das pessoas e fazer a diferença com empatia e coragem.', k:'S' },
+    { label: 'Como o Tony Stark (Homem de Ferro) ou a Hermione Granger (Harry Potter), você é movido(a) pela curiosidade, ama resolver problemas e usa a mente como sua maior ferramenta.', k:'E' },
+    { label: 'Como o Miles Morales (Aranhaverso) ou a Raven (Jovens Titãs), você tem estilo, visão crítica e se expressa com intensidade. Sua força está em ser autêntico(a).', k:'H' },
     ]},
 ];
 
