@@ -5,7 +5,6 @@
   --radius:18px; --gap:20px; --footer-h:35px;
   --fs-base:16px;
 }
-/* perfis */
 @media (max-width:599px){ :root{ --fs-base:clamp(15px,2.5vh + .4vw,18px);} }
 @media (min-width:600px) and (max-width:1023px){ :root{ --fs-base:clamp(16px,2.2vh,19px);} }
 @media (min-width:1024px){ :root{ --fs-base:clamp(16px,1.8vh + .4vw,20px);} }
@@ -34,7 +33,7 @@ body{
 }
 .screen.active{ display:block }
 
-/* Intro sem cartão branco */
+/* Intro full-bleed */
 #screen-intro{
   background:transparent; border-radius:0; box-shadow:none;
   width:100%; max-width:none;
@@ -45,8 +44,6 @@ body{
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   min-height:calc(100dvh - var(--footer-h) - 48px);
 }
-
-/* BG full-bleed */
 body:has(#screen-intro.active){
   background:url("./images/bg_voce_futuro-06.jpg") center/cover no-repeat fixed;
 }
@@ -70,8 +67,6 @@ body:has(#screen-intro.active){
   font-size:clamp(16px,3.6vw,20px);
   margin:clamp(8px,1.6vh,16px) auto 36px;
 }
-
-/* smartphone */
 @media (max-width:599px){
   #logo{ position:absolute; top:12px; right:12px; width:110px; margin:0 }
   #screen-intro.active{ padding-top:140px; min-height:calc(100dvh - var(--footer-h) - 32px) }
@@ -91,20 +86,15 @@ body:has(#screen-intro.active){
 #btnStart,#btnToQuiz,#btnNext,#btnSend{ margin:12px auto 0; font-size:1rem }
 #screen-intro #btnStart{ filter:drop-shadow(0 8px 18px rgba(0,0,0,.25)) }
 
-/* botão INICIAR maior no celular */
-@media (max-width: 640px){
+/* === só o texto do botão Iniciar maior em telas pequenas, sem aumentar o botão === */
+@media (max-width:640px){
   body:not(.totem) #screen-intro #btnStart{
-    font-size: clamp(1.4rem, 4.6vw, 1.9rem) !important; /* cresce de verdade */
-    font-weight: 900 !important;
-    line-height: 1.1 !important;
-    letter-spacing: 0.4px !important;
-
-    /* mantém o tamanho físico do botão */
-    padding: 12px 20px !important;
-    min-width: 150px !important;
-    min-height: 44px !important;
+    font-size:clamp(1.4rem,4.6vw,1.9rem);
+    font-weight:900; line-height:1.1; letter-spacing:.4px;
+    padding:12px 20px; min-width:150px; min-height:44px;
   }
 }
+
 /* =============== HEADER / VOLTAR =============== */
 .formHeader{ display:flex; align-items:center; gap:8px; margin-bottom:12px }
 .formHeader h2{ margin:0; text-align:left; font-weight:700; color:var(--ink); font-size:clamp(22px,2.3vh + 1vw,36px) }
@@ -114,56 +104,49 @@ body:has(#screen-intro.active){
 /* =============== FORM =============== */
 form{ display:grid; gap:var(--gap) }
 .field{ display:grid; gap:8px }
-label{ font-weight:500; color:var(--ink) }
+label, legend{ font-weight:500; color:var(--ink) }
+legend{ margin-bottom:8px }
 .req{ color:var(--brand) }
 
-/* Campos básicos */
-input[type="text"],
-input[type="tel"],
-input[type="email"],
-select{
-  width:100%;
-  border:none;
-  border-bottom:2px solid var(--brand);
-  border-radius:0;
-  padding:12px 6px 10px;
-  background-color:transparent;
-  color:var(--ink);
-  font-size:1em;
+.segmented{ display:flex; gap:12px; flex-wrap:wrap }
+.segmented label{
+  border:1px solid var(--stroke); padding:10px 14px; border-radius:999px; cursor:pointer;
 }
-select:focus,input:focus{ outline:none; border-bottom-color:var(--brand-dark); }
+.segmented input{ margin-right:8px }
+
+.group.hidden, .subgroup.hidden, .field.hidden{ display:none; }
+
+input[type="text"], input[type="tel"], input[type="email"], input[type="number"], select{
+  width:100%;
+  border:none; border-bottom:2px solid var(--brand); border-radius:0;
+  padding:12px 6px 10px; background-color:transparent; color:var(--ink); font-size:1em;
+}
+select:focus, input:focus{ outline:none; border-bottom-color:var(--brand-dark); }
 input::placeholder{ color:#888 }
 
-/* Setinha somente no campo Série */
+/* setinha apenas no select da Série */
 #serie{
-  appearance:none;
-  padding-right:36px;
+  appearance:none; padding-right:36px;
   background-image:
     linear-gradient(45deg, transparent 50%, var(--brand) 50%),
     linear-gradient(135deg, var(--brand) 50%, transparent 50%);
-  background-position:
-    right 14px center,
-    right 8px center;
-  background-size:6px 6px, 6px 6px;
-  background-repeat:no-repeat;
+  background-position: right 14px center, right 8px center;
+  background-size:6px 6px, 6px 6px; background-repeat:no-repeat;
 }
 
-/* Erros e mensagens */
 .error{ color:#b40000; font-style:italic; font-size:.85em; min-height:1em }
 .msg{ text-align:center; color:#1a7f37; min-height:1.2em; font-weight:600 }
 
-/* Consentimento menor */
-.field.consent{ display:grid; gap:8px }
-.consent-label{ display:flex; align-items:flex-start; gap:10px; line-height:1.35 }
-.consent-label input[type="checkbox"]{ margin-top:3px; transform:scale(1.1) }
+/* LGPD menor */
 .field.consent span{ font-size:0.8em; line-height:1.3; color:#444; }
-.field.consent a{ color:var(--brand); text-decoration:underline }
+.consent-label{ display:flex; align-items:flex-start; gap:10px }
+.consent-label input[type="checkbox"]{ margin-top:3px; transform:scale(1.1) }
 
 /* =============== QUIZ =============== */
 .progress{ display:flex; align-items:center; gap:10px; margin-left:auto }
 #progressText{ font-size:.9em; color:#666 }
 .progress .bar{ width:140px; height:8px; background:#eee; border-radius:999px; overflow:hidden }
-#progressBar{ height:100%; width:0%; background:var(--brand); transition:width .25s ease }
+#progressBar{ height:100%; width:0%; background:var(--brand); transition:width .25s cubic-bezier(.2,.7,.2,1) }
 
 .quiz-card{ display:grid; gap:16px }
 #qTitle{ text-align:left; font-size:clamp(24px,2.2vh + 1vw,38px); font-weight:700; color:var(--ink) }
@@ -177,15 +160,9 @@ input::placeholder{ color:#888 }
 }
 .option:hover{ background:#fff1f1; border-color:var(--brand) }
 .option input{ display:none }
-/* garante texto completo, nunca cortado */
 .option span{
-  flex:1;
-  color:var(--ink);
-  line-height:1.35;
-  font-weight:400;
-  white-space:normal;
-  overflow:visible;
-  text-overflow:unset;
+  flex:1; color:var(--ink); line-height:1.35; font-weight:400;
+  white-space:normal; overflow:visible; text-overflow:unset;
 }
 .option::before{ content:attr(data-letter) "."; font-weight:700; color:var(--brand); margin-right:6px }
 .option.selected{ background:var(--brand); border-color:var(--brand); color:#fff }
