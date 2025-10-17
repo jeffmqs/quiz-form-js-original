@@ -428,9 +428,9 @@ function renderResult(k){
     title = 'Seu perfil é: Humanas & Comunicação';
     desc  = 'Você tem o dom da expressão, da empatia e da conexão com o outro. Seu futuro pode estar entre as palavras, ideias e relações.';
     cursos = [
-      'Administração','Ciências Econômicas','Ciências Contábeis','Direito','Filosofia','Fotografia',
-      'Gestão de RH','História','Jornalismo','Letras (Português, Português e Inglês, Português e Espanhol)',
-      'Pedagogia','Psicologia','Publicidade e Propaganda','Serviço Social','Teologia'
+      'Administração','Ciências da Religião','Ciências Econômicas','Ciências Contábeis','Direito','Filosofia',
+      'Gestão de RH','História','Jornalismo','Letras (Português, Português e Inglês)',
+      'Pedagogia','Mídias Sociais','Psicologia','Publicidade e Propaganda','Teologia'
     ];
   }
   if (k==='E'){
@@ -439,8 +439,8 @@ function renderResult(k){
     cursos = [
       'Arquitetura e Urbanismo','Banco de Dados – IA e Ciência de Dados','Ciência da Computação',
       'Ciências Contábeis','Ciências Econômicas','Engenharia da Complexidade (pioneiro e internacional)',
-      'Engenharias (Civil, de Produção, Química e Ambiental)','Física','Inteligência Artificial',
-      'Jogos Digitais','Logística','Química','Sistemas para a Internet','Matemática'
+      'Engenharias (Civil e de Produção)','Inteligência Artificial',
+      'Jogos Digitais','Logística','Matemática','Sistemas para a Internet'
     ];
   }
   if (k==='S'){
