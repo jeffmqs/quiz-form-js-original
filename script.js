@@ -463,7 +463,7 @@ function renderResult(k){
       { nome:'Ciências Contábeis', link:'https://portal.unicap.br/w/ciencias-contabeis#presencial/' },
       { nome:'Ciências Econômicas', link:'https://portal.unicap.br/w/ciencia-economica#presencial/' },
       { nome:'Engenharia da Complexidade (pioneiro e internacional)', link:'https://portal.unicap.br/w/engenharia-da-complexidade#presencial/' },
-      { nome:'Engenharias (Civil e de Produção)', link:'https://portal.unicap.br/graduacao/engenharia-civil/' },
+      { nome:'Engenharias (Civil e de Produção)', link:'https://portal.unicap.br/w/engenharia-civil#presencial/' },
       { nome:'Inteligência Artificial', link:'https://portal.unicap.br/w/inteligencia-artificial#presencial/' },
       { nome:'Jogos Digitais', link:'https://portal.unicap.br/w/jogos-digitais#presencial/' },
       { nome:'Logística', link:'https://portal.unicap.br/w/logistica/' },
