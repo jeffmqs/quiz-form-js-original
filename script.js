@@ -422,43 +422,96 @@ function pickWinner({H,E,S}){
 
 /* =================== RESULTADO =================== */
 const resultContent = document.getElementById('resultContent');
+
 function renderResult(k){
+
   let title='', desc='', cursos=[];
+
   if (k==='H'){
     title = 'Seu perfil é: Humanas & Comunicação';
+
     desc  = 'Você tem o dom da expressão, da empatia e da conexão com o outro. Seu futuro pode estar entre as palavras, ideias e relações.';
+
     cursos = [
-      'Administração','Ciências da Religião','Ciências Econômicas','Ciências Contábeis','Direito','Filosofia',
-      'Gestão de RH','História','Jornalismo','Letras (Português, Português e Inglês)',
-      'Pedagogia','Mídias Sociais','Psicologia','Publicidade e Propaganda','Teologia'
+      { nome:'Administração', link:'https://portal.unicap.br/w/curso/administracao#presencial/' },
+      { nome:'Ciências da Religião', link:'https://portal.unicap.br/w/ciencia-da-religiao/' },
+      { nome:'Ciências Econômicas', link:'https://portal.unicap.br/w/ciencia-economica#presencial/' },
+      { nome:'Ciências Contábeis', link:'https://portal.unicap.br/w/ciencias-contabeis#presencial/' },
+      { nome:'Direito', link:'https://portal.unicap.br/w/direito#presencial/' },
+      { nome:'Filosofia', link:'https://portal.unicap.br/w/filosofia-licenciatura#presencial/' },
+      { nome:'Gestão de RH', link:'https://portal.unicap.br/w/gestao-de-recursos-humanos/' },
+      { nome:'História', link:'https://portal.unicap.br/w/historia#presencial/' },
+      { nome:'Jornalismo', link:'https://portal.unicap.br/w/jornalismo#presencial/' },
+      { nome:'Letras (Português, Português e Inglês)', link:'https://portal.unicap.br/w/letras-portugues-e-ingles#presencial/' },
+      { nome:'Pedagogia', link:'https://portal.unicap.br/w/pedagogia#presencial/' },
+      { nome:'Mídias Sociais', link:'https://portal.unicap.br/w/midias-sociais-digitais/' },
+      { nome:'Psicologia', link:'https://portal.unicap.br/w/psicologia#presencial/' },
+      { nome:'Publicidade e Propaganda', link:'https://portal.unicap.br/w/publicidade-e-propaganda#presencial/' },
+      { nome:'Teologia', link:'https://portal.unicap.br/w/teologia#presencial/' }
     ];
   }
+
   if (k==='E'){
     title = 'Seu perfil é: Exatas & Tecnologia';
+
     desc  = 'Você tem uma mente lógica, investigativa e movida a desafios. Curioso por natureza, adora entender como as coisas funcionam e busca criar soluções para o mundo.';
+
     cursos = [
-      'Arquitetura e Urbanismo','Banco de Dados – IA e Ciência de Dados','Ciência da Computação',
-      'Ciências Contábeis','Ciências Econômicas','Engenharia da Complexidade (pioneiro e internacional)',
-      'Engenharias (Civil e de Produção)','Inteligência Artificial',
-      'Jogos Digitais','Logística','Matemática','Sistemas para a Internet'
+      { nome:'Arquitetura e Urbanismo', link:'https://portal.unicap.br/w/arquitetura-e-urbanismo#presencial/' },
+      { nome:'Banco de Dados – IA e Ciência de Dados', link:'https://portal.unicap.br/w/banco-de-dados#presencial/' },
+      { nome:'Ciência da Computação', link:'https://portal.unicap.br/w/ciencia-da-computacao#presencial/' },
+      { nome:'Ciências Contábeis', link:'https://portal.unicap.br/w/ciencias-contabeis#presencial/' },
+      { nome:'Ciências Econômicas', link:'https://portal.unicap.br/w/ciencia-economica#presencial/' },
+      { nome:'Engenharia da Complexidade (pioneiro e internacional)', link:'https://portal.unicap.br/w/engenharia-da-complexidade#presencial/' },
+      { nome:'Engenharias (Civil e de Produção)', link:'https://portal.unicap.br/graduacao/engenharia-civil/' },
+      { nome:'Inteligência Artificial', link:'https://portal.unicap.br/w/inteligencia-artificial#presencial/' },
+      { nome:'Jogos Digitais', link:'https://portal.unicap.br/w/jogos-digitais#presencial/' },
+      { nome:'Logística', link:'https://portal.unicap.br/w/logistica/' },
+      { nome:'Matemática', link:'https://portal.unicap.br/w/matematica/' },
+      { nome:'Sistemas para a Internet', link:'https://portal.unicap.br/w/sistemas-para-internet#presencial/' }
     ];
   }
+
   if (k==='S'){
     title = 'Seu perfil é: Saúde & Ciências da Vida';
+
     desc  = 'Você tem empatia, sensibilidade e vontade genuína de cuidar do outro. Sua vocação é transformar vidas por meio do conhecimento e do acolhimento.';
+
     cursos = [
-      'Medicina','Enfermagem','Psicologia','Fisioterapia','Fonoaudiologia','Farmácia','Nutrição','Ciências Biológicas'
+      { nome:'Medicina', link:'https://portal.unicap.br/w/medicina#presencial/' },
+      { nome:'Enfermagem', link:'https://portal.unicap.br/w/enfermagem#presencial/' },
+      { nome:'Psicologia', link:'https://portal.unicap.br/w/psicologia#presencial/' },
+      { nome:'Fisioterapia', link:'https://portal.unicap.br/w/fisioterapia#presencial/' },
+      { nome:'Fonoaudiologia', link:'https://portal.unicap.br/w/fonoaudiologia#presencial/' },
+      { nome:'Farmácia', link:'https://portal.unicap.br/w/farmacia#presencial/' },
+      { nome:'Nutrição', link:'https://portal.unicap.br/w/nutricao#presencial/' },
+      { nome:'Ciências Biológicas', link:'https://portal.unicap.br/w/ciencias-biologicas-licenciatura/' }
     ];
   }
 
   resultContent.innerHTML = `
     <h3>${title}</h3>
+
     <p>${desc}</p>
+
     <p><strong>Cursos Unicap para você:</strong></p>
-    <ul>${cursos.map(c => `<li>${c}</li>`).join('')}</ul>
+
+    <ul>
+      ${cursos.map(c => `
+        <li>
+          <a 
+            href="${c.link}" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            style="color:#0000EE; text-decoration:underline;"
+          >
+            ${c.nome}
+          </a>
+        </li>
+      `).join('')}
+    </ul>
   `;
 }
-
 /* =================== UTIL =================== */
 function resetFlowForNewRun(){
   answers = [];
