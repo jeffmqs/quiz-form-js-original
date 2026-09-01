@@ -45,10 +45,10 @@ body{
   min-height:calc(100dvh - var(--footer-h) - 48px);
 }
 body:has(#screen-intro.active){
-  background:url("./images/bg_voce_futuro-06.jpg") center/cover no-repeat fixed;
+  background:url("./images/telaquiz.jpg") center/cover no-repeat fixed;
 }
 @media (max-width:599px){
-  body:has(#screen-intro.active){ background-image:url("./images/bg_voce_futuro-05.jpg"); }
+  body:has(#screen-intro.active){ background-image:url("./images/tela-mobile.jpeg"); }
 }
 
 /* =============== INTRO CONTENT =============== */
@@ -210,3 +210,6 @@ body.totem #screen-intro #btnStart{
   min-width: 170px;
 }
 
+#logo {
+  display: none !important;
+}
